@@ -2,14 +2,28 @@ FROM python:3.8-slim-buster
 
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir /app
+# Create necessary directories
+RUN mkdir -p /app/mediafiles
+RUN mkdir -p /app/staticfiles
+
 WORKDIR /app
+
 COPY requirements.txt /app/
 
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+# Installing necessary packages and libraries
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        libpq-dev \
+        gcc && \
+    pip install --upgrade pip && \
+    pip install -r requirements.txt && \
+    apt-get autoremove -y && \
+    apt-get clean
 
 COPY . /app/
 
-# New: Install Gunicorn
+# Adjust permissions for the mediafiles directory
+RUN chown -R 1000:1000 /app/mediafiles
+
+# Install Gunicorn
 RUN pip install gunicorn
