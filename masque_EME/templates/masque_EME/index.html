@@ -1,0 +1,17 @@
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+</form>
+
+{% if extracted_text %}
+    <h3>Extracted Text from the PDF:</h3>
+    <pre>{{ extracted_text }}</pre>
+{% endif %}
+
+{% if file_url %}
+    <p>
+        File uploaded! 
+        <a href="{{ file_url }}" target="_blank">View it here</a>.
+    </p>
+{% endif %}
