@@ -123,12 +123,14 @@ def extract_information(text):
     info_dict["Organisme > Mail"] = emails[1] if len(emails) > 1 else "Not found"
     
     # Pole Emploi
-    pole_emploi_match = re.search(r"Pôle emploi de :(.*?)Lors de l'entretien", text, re.DOTALL)
+    pole_emploi_match = re.search(r"Pôle emploi de\s*:(.*?)(Lors de l'entretien|Lors de sa prise de rendez-vous)", text, re.DOTALL)
     if pole_emploi_match:
-        pole_emploi = pole_emploi_match.group(1).strip()  # Removing spaces before and after the string
+        pole_emploi = pole_emploi_match.group(1).replace('\n', ' ').strip()  # Removing spaces and newline characters around and within the string
         info_dict["Correspondant > Pole emploi de"] = pole_emploi
     else:
         info_dict["Correspondant > Pole emploi de"] = "Not found"
+
+
 
     # Conseiller PE
     correspondent_name_match = re.search(r"Correspondant-e Pôle emploi\n\nNom, prénom :.*?(\w+[\s\n]*\w+).*?Pôle emploi de :", text, re.DOTALL)
