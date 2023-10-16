@@ -16,31 +16,30 @@
                 <button type="submit" class="btn btn-primary">Envoyer</button>
             </form>
 
+        
+
+            {% if file_url %}
+                <br><br>
+                    PRE 25 envoyée! <br><br>
+                    <a class="btn btn-success" href="{{ file_url }}" target="_blank">PRE25 originale</a>
+            {% endif %}
+            
+            <!-- Add this part to download the modified docx file -->
+            {% if PRE40_url %}
+                    <a class="btn btn-success" href="{{ PRE40_url }}" download>PRE40 modifiée</a>
+            {% endif %}
+
+            {# <pre>{{ raw_extracted_text }}</pre> #}
             <!-- Include additional parts to show the PDF text and link -->
             {% if extracted_info %}
+            <br><br><br>
             <div>
+                <h3>Infos extraites :</h3>
                 {% for key, value in extracted_info.items %}
                     <p><strong>{{ key }}:</strong> {{ value }}</p>
                 {% endfor %}
             </div>
             {% endif %}
-        
-
-            {% if file_url %}
-                <p>
-                    PRE 25 envoyée! <br>
-                    <a href="{{ file_url }}" target="_blank">PRE25 originale</a>.
-                </p>
-            {% endif %}
-            
-            <!-- Add this part to download the modified docx file -->
-            {% if PRE40_url %}
-                <p>
-                    <a href="{{ PRE40_url }}" download>PRE40 modifiée</a>.
-                </p>
-            {% endif %}
-
-            <pre>{{ raw_extracted_text }}</pre>
 
         </div>
     </div>
