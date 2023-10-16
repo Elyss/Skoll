@@ -28,26 +28,26 @@
 
             {% if file_url %}
                 <p>
-                    PRE 25 envoyée! 
-                    <a href="{{ file_url }}" target="_blank">Voir la PRE25 originale</a>.
+                    PRE 25 envoyée! <br>
+                    <a href="{{ file_url }}" target="_blank">PRE25 originale</a>.
                 </p>
             {% endif %}
             
             <!-- Add this part to download the modified docx file -->
             {% if PRE40_url %}
                 <p>
-                    <a href="{{ PRE40_url }}" download>Télécharger la PRE40 modifiée</a>.
+                    <a href="{{ PRE40_url }}" download>PRE40 modifiée</a>.
                 </p>
             {% endif %}
 
-            <pre>{{ raw_extracted_text }}</pre>
+            {# <pre>{{ raw_extracted_text }}</pre> #}
 
         </div>
     </div>
 </div>
 
 <!-- Other links -->
-<a href="{% static 'Skoll/docx/PRE40.docx' %}" download>Download Template PRE40</a>
+{# <a href="{% static 'Skoll/docx/PRE40.docx' %}" download>Download Template PRE40</a> #}
 
 
 {% endblock %}
