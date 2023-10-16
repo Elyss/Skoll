@@ -34,26 +34,56 @@
             {% endif %}
             
             <!-- Add this part to download the modified docx file -->
-            {% if modified_docx_url %}
+            {% if PRE40_url %}
                 <p>
-                    <a href="{{ modified_docx_url }}" download>Télécharger le document modifié</a>.
+                    <a href="{{ PRE40_url }}" download>Télécharger la PRE40 modifiée</a>.
                 </p>
             {% endif %}
 
-            {% comment %} <pre>{{ raw_extracted_text }}</pre> {% endcomment %}
+            <pre>{{ raw_extracted_text }}</pre>
 
         </div>
     </div>
 </div>
 
 <!-- Other links -->
-<a href="{{ file_url }}" target="_blank">Voir la PRE25 originale</a>.
 <a href="{% static 'Skoll/docx/PRE40.docx' %}" download>Download Template PRE40</a>
+
 
 {% endblock %}
 
 {% block js %}
-<script>
-    // ... (your existing JavaScript code)
+
+    <script>
+    let dropZone = document.getElementById('drop-zone');
+    let fileInput = document.getElementById('id_pdf_file');  // Assuming the id of your file input is 'id_pdf_file'
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+
+        let files = e.dataTransfer.files;
+        fileInput.files = files;
+
+        dropZone.innerText = files[0].name;
+    });
+
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+        dropZone.innerText = fileInput.files[0].name;
+    });
 </script>
+
 {% endblock %}
