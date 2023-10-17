@@ -46,6 +46,7 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
+    username = None  # Overriding username field
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []  # or include other fields that you require, but exclude 'email'
     objects = CustomUserManager()
