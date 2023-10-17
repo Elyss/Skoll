@@ -17,7 +17,7 @@ def replace_tag(paragraphs, tag, new_text):
                 run.text = run.text.replace(tag, new_text)
 
 
-def replace_tag_in_docx(file_path, tag_dict):
+def replace_tag_in_docx(file_path, tag_dict,doc_name):
     doc = Document(file_path)
     
     # Replace in paragraphs
@@ -42,7 +42,7 @@ def replace_tag_in_docx(file_path, tag_dict):
                 replace_tag(section.footer.paragraphs, tag, tag_dict[tag])
             
     # Define the path to save the modified document
-    new_file_name = 'PRE40_' + tag_dict['N_MARCHE'] + '_'+tag_dict['N_COMMANDE']+'_'+tag_dict['BENEFICIARY_NOM'].replace(" ","_")+'_'+tag_dict['DATE_START'].replace("/","_")+'.docx'
+    new_file_name = doc_name + '_' + tag_dict['N_MARCHE'] + '_'+tag_dict['N_COMMANDE']+'_'+tag_dict['BENEFICIARY_NOM'].replace(" ","_")+'_'+tag_dict['DATE_START'].replace("/","_")+'.docx'
     media_root = settings.MEDIA_ROOT
     save_path = os.path.join(media_root, new_file_name)
     
@@ -146,6 +146,7 @@ def extract_information(text):
 def index(request):
     file_url = None
     pre40_url = None
+    pre20_url = None
     extracted_info = None
     extracted_text = None  
     tagged_info = None  # Initialize tagged_info here
@@ -177,6 +178,11 @@ def index(request):
         form = pre40(request.POST, request.FILES)
         
         if form.is_valid():
+            conseiller= form.cleaned_data.get('conseiller')  # Getting the content of 'conseiller' field
+            mail_conseiller= form.cleaned_data.get('mail_conseiller')  # Getting the content of 'conseiller' field
+
+            
+
             instance = form.save()
             file_url = instance.pdf_file.url
             file_path = instance.pdf_file.path
@@ -190,10 +196,17 @@ def index(request):
             # Creating a new dictionary with tags as keys
             tagged_info = {tag_mapping[key]: value for key, value in extracted_info.items() if key in tag_mapping}
 
-            pre40_url = replace_tag_in_docx('static/Skoll/docx/PRE40.docx',tagged_info)
+            # Adding 'conseiller' and 'mail_conseiller' values to tagged_info
+            tagged_info['MAIL_CONSEILLER'] = mail_conseiller
+            tagged_info['CONSEILLER'] = conseiller
+
+            pre40_url = replace_tag_in_docx('static/Skoll/docx/PRE40.docx',tagged_info,'PRE40')
+            pre20_url = replace_tag_in_docx('static/Skoll/docx/PRE20.docx',tagged_info,'PRE20')
 
 
             form = pre40()  # Reset the form after saving
+
+            
             
     else:
         form = pre40()
@@ -204,6 +217,7 @@ def index(request):
         "extracted_info": tagged_info,
         "raw_extracted_text": extracted_text,
         "PRE40_url": pre40_url,
+        "PRE20_url": pre20_url,
     }
 
     return render(request, 'masque_EME/index.html', context)

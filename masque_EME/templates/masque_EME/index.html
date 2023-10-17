@@ -7,16 +7,14 @@
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <h3>Générer les PRE40 et PRE20</h3>
-            <form method="post" enctype="multipart/form-data" id="pdf-upload-form">
-                {% csrf_token %}
-                <div id="drop-zone" class="mb-3">
-                    <p>Glisser & Déposer la PRE25</p>
-                </div>
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Envoyer</button>
-            </form>
-
-        
+                <form method="post" enctype="multipart/form-data" id="pdf-upload-form" autocomplete="on">
+                    {% csrf_token %}
+                    <div id="drop-zone" class="mb-3">
+                        <p>Glisser & Déposer la PRE25</p>
+                    </div>
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </form>
 
             {% if file_url %}
                 <br><br>
@@ -27,6 +25,9 @@
             <!-- Add this part to download the modified docx file -->
             {% if PRE40_url %}
                     <a class="btn btn-success" href="{{ PRE40_url }}" download>PRE40 modifiée</a>
+            {% endif %}
+            {% if PRE20_url %}
+                    <a class="btn btn-success" href="{{ PRE20_url }}" download>PRE20 modifiée</a>
             {% endif %}
 
             {# <pre>{{ raw_extracted_text }}</pre> #}
@@ -83,6 +84,7 @@
     fileInput.addEventListener('change', () => {
         dropZone.innerText = fileInput.files[0].name;
     });
+
 </script>
 
 {% endblock %}
