@@ -7,11 +7,19 @@
 
             <p>{{ message }}</p>
             <form method="post">
-                {{ form.as_p }}
+                <table class="table">
+                    {% for field in form %}
+                        <tr>
+                            <td><small>{{ field.label_tag }}</small></td>
+                            <td><small>{{ field }}</small></td>
+                        </tr>
+                    {% endfor %}
+                </table>
                 {% csrf_token %}
-                <button type="submit" >Se connecter</button>
+                <button class="btn btn-primary" type="submit" >Se connecter</button>
             </form>
-            <p>Pas encore membre ? <a href="{% url 'signup' %}">Inscrivez-vous maintenant !</a></p>
+            <br>
+            <p>Pas encore d'accès ? <a href="{% url 'signup' %}">Inscrivez-vous maintenant !</a></p>
 
         </div>
     </div>

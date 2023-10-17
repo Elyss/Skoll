@@ -1,12 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Inscription</h2>
-    {% if form.errors %}
-        {{ form.errors }}
-    {% endif %}
-    <form method="post">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <button type="submit" >S’inscrire</button>
-    </form>
+
+
+    <div class="row">
+        <div class="col-sm-4 col offset-md-3">
+            <h2>Inscription</h2>
+            {% if form.errors %}
+                {{ form.errors }}
+            {% endif %}
+            <form method="post">
+                <table class="table">
+                    {% for field in form %}
+                        <tr>
+                            <td><small>{{ field.label_tag }}</small></td>
+                            <td><small>{{ field }}</small></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                {% csrf_token %}
+                <button type="submit" >S’inscrire</button>
+            </form>
+        </div>
+    </div>
 {% endblock content %}

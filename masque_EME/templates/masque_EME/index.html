@@ -18,64 +18,62 @@
 {% load static %}
 
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <h3>Générer les PRE40 et PRE20</h3>
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h3>Générer les PRE40 et PRE20</h3>
 
-                {% if file_url %}
-                    <p>PRE 25 envoyée!</p>
-                {% endif %}
-
-                {% if message %}
-                    <p>{{message}}</p>
-                {% endif %}
-                
-                
-                {% if file_url %}
-                        <a class="btn btn-success" href="{{ file_url }}" target="_blank">PRE25 originale</a>
-                {% endif %}
-                {% if PRE40_url %}
-                    <a class="btn btn-success" href="{{ PRE40_url }}" download>PRE40 modifiée</a>
-                {% endif %}
-                {% if PRE20_url %}
-                    <a class="btn btn-success" href="{{ PRE20_url }}" download>PRE20 modifiée</a>
-                {% endif %}
-                {% if zip_file %}
-                    <a class="btn btn-primary" href="{{ zip_file }}" download>Dossier complet</a>
-                {% endif %}
-
-
-
-                <form method="post" enctype="multipart/form-data" id="pdf-upload-form" autocomplete="on">
-                    {% csrf_token %}
-                    <div id="drop-zone" class="mb-3">
-                        <p>Glisser & Déposer la PRE25</p>
-                    </div>
-
-                    <table class="table">
-                        {% for field in form %}
-                            <tr>
-                                <td><small>{{ field.label_tag }}</small></td>
-                                <td><small>{{ field }}</small></td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-
-                    <button type="submit" class="btn btn-primary">Envoyer</button>
-                </form>
-
-            {% if extracted_info %}
-            <br><br><br>
-            <div>
-                <h3>Infos extraites :</h3>
-                {% for key, value in extracted_info.items %}
-                    <p><strong>{{ key }}:</strong> {{ value }}</p>
-                {% endfor %}
-            </div>
+            {% if file_url %}
+                <p>PRE 25 envoyée!</p>
             {% endif %}
 
+            {% if message %}
+                <p>{{message}}</p>
+            {% endif %}
+            
+            
+            {% if file_url %}
+                    <a class="btn btn-success" href="{{ file_url }}" target="_blank">PRE25 originale</a>
+            {% endif %}
+            {% if PRE40_url %}
+                <a class="btn btn-success" href="{{ PRE40_url }}" download>PRE40 modifiée</a>
+            {% endif %}
+            {% if PRE20_url %}
+                <a class="btn btn-success" href="{{ PRE20_url }}" download>PRE20 modifiée</a>
+            {% endif %}
+            {% if zip_file %}
+                <a class="btn btn-primary" href="{{ zip_file }}" download>Dossier complet</a>
+            {% endif %}
+
+
+
+            <form method="post" enctype="multipart/form-data" id="pdf-upload-form" autocomplete="on">
+                {% csrf_token %}
+                <div id="drop-zone" class="mb-3">
+                    <p>Glisser & Déposer la PRE25</p>
+                </div>
+
+                <table class="table">
+                    {% for field in form %}
+                        <tr>
+                            <td><small>{{ field.label_tag }}</small></td>
+                            <td><small>{{ field }}</small></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </form>
+
+        {% if extracted_info %}
+        <br><br><br>
+        <div>
+            <h3>Infos extraites :</h3>
+            {% for key, value in extracted_info.items %}
+                <p><strong>{{ key }}:</strong> {{ value }}</p>
+            {% endfor %}
         </div>
+        {% endif %}
+
     </div>
 </div>
 

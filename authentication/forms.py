@@ -10,6 +10,24 @@ class LoginForm(forms.Form):
 
 
 class SignUpForm(UserCreationForm):
+    password1 = forms.CharField(
+        label="Mot de passe",
+        strip=False,
+        widget=forms.PasswordInput,
+    )
+    
+    password2 = forms.CharField(
+        label="Confirmation du mot de passe",
+        widget=forms.PasswordInput,
+        strip=False,
+    )
+    
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
         fields = ('email', 'first_name', 'last_name')
+        labels = {
+            'email': 'Email BGE',
+            'first_name': 'Prénom',
+            'last_name': 'NOM',
+            'password':"Mot de passe",
+        }
