@@ -39,7 +39,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
+LANGUAGE_CODE = 'fr-fr'
 # Application definition
 
 INSTALLED_APPS = [
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'masque_EME',
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -67,7 +68,9 @@ ROOT_URLCONF = 'Skoll.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR.joinpath('templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -148,3 +151,8 @@ SESSION_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = [
     "https://masque.bge-adil.eu",
 ]
+
+AUTH_USER_MODEL = 'authentication.User'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'login'

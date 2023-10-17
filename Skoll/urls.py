@@ -18,10 +18,15 @@ from django.urls import path
 from masque_EME import views
 from django.conf import settings
 from django.conf.urls.static import static
+import authentication.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('EME/', views.index),
+    path('EME/', views.index, name='EME'),
+    path('/', views.index),
+    path('', authentication.views.LoginPageView.as_view(), name='login'),
+    path('logout/', authentication.views.logout_user, name='logout'),
+    path('signup/', authentication.views.signup_page, name='signup'),
 
 ]
 

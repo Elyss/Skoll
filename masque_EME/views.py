@@ -8,6 +8,8 @@ from pdfminer.high_level import extract_text
 import re
 from docx import Document
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+
 
 
 def replace_tag(paragraphs, tag, new_text):
@@ -142,15 +144,19 @@ def extract_information(text):
            
     return info_dict
 
-
+@login_required
 def index(request):
     file_url = None
     pre40_url = None
     pre20_url = None
     extracted_info = None
     extracted_text = None  
-    tagged_info = None  # Initialize tagged_info here
+    tagged_info = None
 
+    initial_data = {
+        'mail_conseiller': request.user.email,
+        'conseiller': request.user.last_name + " " +request.user.first_name,
+    }
 
     # Mapping of info_dict keys to tags
     tag_mapping = {
@@ -204,12 +210,12 @@ def index(request):
             pre20_url = replace_tag_in_docx('static/Skoll/docx/PRE20.docx',tagged_info,'PRE20')
 
 
-            form = pre40()  # Reset the form after saving
+            form = pre40(initial=initial_data)  # Reset the form after saving
 
             
             
     else:
-        form = pre40()
+        form = pre40(initial=initial_data)
 
     context = {
         "form": form,

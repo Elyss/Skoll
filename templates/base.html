@@ -15,18 +15,13 @@
 
     <div class="container">
         {% block css %}
-        <style>
-            #drop-zone {
-                border: 2px dashed #ccc;
-                padding: 50px;
-                text-align: center;
-            }
 
-            #drop-zone.dragging {
-                border-color: #000;
-            }
-        </style>
         {% endblock %}
+
+        {%  if user.is_authenticated %}
+            <p>Vous êtes connecté en tant que {{ request.user }}. <a class="btn btn-danger btn-sm" href="{% url 'logout' %}">Se déconnecter</a></p>
+            <p><a class="btn btn-primary " href="{% url 'EME' %}">MASQUE EME</a></p>
+        {% endif %}
 
         {% block content %}
         {% endblock %}
