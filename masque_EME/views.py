@@ -9,7 +9,8 @@ import re
 from docx import Document
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-
+import zipfile
+import shutil
 
 
 def replace_tag(paragraphs, tag, new_text):
@@ -52,7 +53,11 @@ def replace_tag_in_docx(file_path, tag_dict,doc_name):
     doc.save(save_path)
 
     # Return the URL
-    return f'{settings.MEDIA_URL}{new_file_name}'
+    url = f'{settings.MEDIA_URL}{new_file_name}'
+    url_from_app = f'{new_file_name}'
+    dict = {'url':url,'url_from_app':url_from_app}
+
+    return dict
 
 
 
@@ -148,14 +153,29 @@ def extract_information(text):
 def index(request):
     file_url = None
     pre40_url = None
-    pre20_url = None
+    pre20_url = None    
+    pre40f = None
+    pre20f = None
     extracted_info = None
     extracted_text = None  
     tagged_info = None
+    zip_file_url = None
+    saved_data = request.user.action_data or {}
+    message = None
 
     initial_data = {
         'mail_conseiller': request.user.email,
-        'conseiller': request.user.last_name + " " +request.user.first_name,
+        'conseiller': request.user.last_name + " " + request.user.first_name,
+        'rdv_diagnostic': saved_data.get('rdv_diagnostic', ''),
+        'atelier_1': saved_data.get('atelier_1', ''),
+        'point_etape_1': saved_data.get('point_etape_1', ''),
+        'atelier_2': saved_data.get('atelier_2', ''),
+        'point_etape_2': saved_data.get('point_etape_2', ''),
+        'atelier_3': saved_data.get('atelier_3', ''),
+        'point_etape_3': saved_data.get('point_etape_3', ''),
+        'rdv_intermediaire': saved_data.get('rdv_intermediaire', ''),
+        'atelier_4': saved_data.get('atelier_4', ''),
+        'rdv_bilan': saved_data.get('rdv_bilan', ''),
     }
 
     # Mapping of info_dict keys to tags
@@ -187,6 +207,24 @@ def index(request):
             conseiller= form.cleaned_data.get('conseiller')  # Getting the content of 'conseiller' field
             mail_conseiller= form.cleaned_data.get('mail_conseiller')  # Getting the content of 'conseiller' field
 
+            planification_data = {
+                'conseiller': form.cleaned_data['conseiller'],
+                'mail_conseiller': form.cleaned_data['mail_conseiller'],
+                'rdv_diagnostic': form.cleaned_data['rdv_diagnostic'],
+                'atelier_1': form.cleaned_data['atelier_1'],
+                'point_etape_1': form.cleaned_data['point_etape_1'],
+                'atelier_2': form.cleaned_data['atelier_2'],
+                'point_etape_2': form.cleaned_data['point_etape_2'],
+                'atelier_3': form.cleaned_data['atelier_3'],
+                'point_etape_3': form.cleaned_data['point_etape_3'],
+                'rdv_intermediaire': form.cleaned_data['rdv_intermediaire'],
+                'atelier_4': form.cleaned_data['atelier_4'],
+                'rdv_bilan': form.cleaned_data['rdv_bilan'],
+            }
+
+            request.user.action_data = planification_data
+            request.user.save()
+
             
 
             instance = form.save()
@@ -206,14 +244,53 @@ def index(request):
             tagged_info['MAIL_CONSEILLER'] = mail_conseiller
             tagged_info['CONSEILLER'] = conseiller
 
-            pre40_url = replace_tag_in_docx('static/Skoll/docx/PRE40.docx',tagged_info,'PRE40')
-            pre20_url = replace_tag_in_docx('static/Skoll/docx/PRE20.docx',tagged_info,'PRE20')
+             # Adding 'planification_data' values to tagged_info with prefix PLANIF_
+            for key, value in planification_data.items():
+                tagged_info[f'PLANIF_{key.upper()}'] = value
 
+            if "distance" in tagged_info["ORGANISM_LIEU"]:
+                pre40f = replace_tag_in_docx('static/Skoll/docx/PRE40_dist.docx',tagged_info,'PRE40')
+                message = "Modalité à distance"
+            else:
+                pre40f = replace_tag_in_docx('static/Skoll/docx/PRE40_pres.docx',tagged_info,'PRE40')
+                message = "Modalité en présence"
+
+
+            pre20f = replace_tag_in_docx('static/Skoll/docx/PRE20.docx',tagged_info,'PRE20')
+
+            pre20_url = pre20f['url']
+            pre40_url = pre40f['url']
+
+            # Creating the zip file
+            zip_file_name = tagged_info['N_COMMANDE'] + "_" + tagged_info['BENEFICIARY_NOM'] + '.zip'
+
+            zip_file_path = os.path.join(settings.MEDIA_ROOT, zip_file_name)
+            with zipfile.ZipFile(zip_file_path, 'w') as zf:
+                zf.write(os.path.join(settings.MEDIA_ROOT, pre40f['url_from_app']), pre40f['url_from_app'])
+                zf.write(os.path.join(settings.MEDIA_ROOT, pre20f['url_from_app']), pre20f['url_from_app'])
+                zf.write(file_path, os.path.basename(file_path))
+            
+            zip_file_url = f'{settings.MEDIA_URL}{zip_file_name}'
+
+            saved_data = request.user.action_data or {}
+            initial_data = {
+                'mail_conseiller': request.user.email,
+                'conseiller': request.user.last_name + " " + request.user.first_name,
+                'rdv_diagnostic': saved_data.get('rdv_diagnostic', ''),
+                'atelier_1': saved_data.get('atelier_1', ''),
+                'point_etape_1': saved_data.get('point_etape_1', ''),
+                'atelier_2': saved_data.get('atelier_2', ''),
+                'point_etape_2': saved_data.get('point_etape_2', ''),
+                'atelier_3': saved_data.get('atelier_3', ''),
+                'point_etape_3': saved_data.get('point_etape_3', ''),
+                'rdv_intermediaire': saved_data.get('rdv_intermediaire', ''),
+                'atelier_4': saved_data.get('atelier_4', ''),
+                'rdv_bilan': saved_data.get('rdv_bilan', ''),
+            }
 
             form = pre40(initial=initial_data)  # Reset the form after saving
+            
 
-            
-            
     else:
         form = pre40(initial=initial_data)
 
@@ -224,6 +301,8 @@ def index(request):
         "raw_extracted_text": extracted_text,
         "PRE40_url": pre40_url,
         "PRE20_url": pre20_url,
+        "zip_file": zip_file_url,
+        "message":message,
     }
 
     return render(request, 'masque_EME/index.html', context)

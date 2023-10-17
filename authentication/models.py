@@ -47,6 +47,22 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractUser):
     email = models.EmailField(unique=True)
     username = None  # Overriding username field
+    action_data = models.JSONField(null=True, blank=True)  # New field to store the action data
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []  # or include other fields that you require, but exclude 'email'
     objects = CustomUserManager()
+
+    def set_action_data(self, data_dict):
+        """
+        Set or update the action_data field with a new dictionary
+        """
+        self.action_data = json.dumps(data_dict)
+        self.save()
+
+    def get_action_data(self):
+        """
+        Retrieve the dictionary from the action_data field
+        """
+        return json.loads(self.action_data) if self.action_data else {}
+
