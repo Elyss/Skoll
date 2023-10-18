@@ -17,6 +17,13 @@
 {% block content %}
 {% load static %}
 
+<div id="loading-spinner" style="display:none; position:fixed; top:0; left:0; height:100%; width:100%; background-color:rgba(255,255,255,0.8); z-index:1000;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <img src="{% static 'Skoll/img/loading.gif' %}" alt="Loading..."> <!-- Path to your spinner image -->
+        <p>Chargement...</p>
+    </div>
+</div>
+
 
 <div class="row">
     <div class="col-md-6 offset-md-3">
@@ -46,7 +53,7 @@
             </p>
 
 
-            <form method="post" enctype="multipart/form-data" id="pdf-upload-form" autocomplete="on">
+            <form method="post" enctype="multipart/form-data" id="pdf-upload-form" autocomplete="on" onsubmit="showSpinner()">
                 {% csrf_token %}
                 <div id="drop-zone" class="mb-3">
                     <p>Glisser & Déposer la PRE25</p>
@@ -94,6 +101,12 @@
 {% block js %}
 
     <script>
+
+    function showSpinner() {
+        document.getElementById('loading-spinner').style.display = 'block';
+    }
+
+
     let dropZone = document.getElementById('drop-zone');
     let fileInput = document.getElementById('id_pdf_file');  // Assuming the id of your file input is 'id_pdf_file'
 
