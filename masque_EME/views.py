@@ -208,6 +208,17 @@ def index(request):
         if form.is_valid():
             conseiller= form.cleaned_data.get('conseiller')  # Getting the content of 'conseiller' field
             mail_conseiller= form.cleaned_data.get('mail_conseiller')  # Getting the content of 'conseiller' field
+            # Capturing 'rdv_bilan' date
+            rdv_bilan = form.cleaned_data['rdv_bilan']
+
+            # Formatting 'rdv_bilan' date
+            if rdv_bilan:  # Check if 'rdv_bilan' is not None or empty
+                rdv_bilan_format = rdv_bilan.strftime("|%d| / |%m| / |%y|")
+            else:
+                rdv_bilan_format = "Not found"
+
+            tagged_info['RDV_BILAN_FORMAT'] = rdv_bilan_format
+
 
             planification_data = {
                 'conseiller': form.cleaned_data['conseiller'],
