@@ -11,6 +11,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 import zipfile
 import shutil
+from datetime import datetime
 
 
 def replace_tag(paragraphs, tag, new_text):
@@ -209,7 +210,7 @@ def index(request):
             conseiller= form.cleaned_data.get('conseiller')  # Getting the content of 'conseiller' field
             mail_conseiller= form.cleaned_data.get('mail_conseiller')  # Getting the content of 'conseiller' field
             # Capturing 'rdv_bilan' date
-            rdv_bilan = form.cleaned_data['rdv_bilan']
+            rdv_bilan = form.cleaned_data['rdv_bilan'].strptime(date_str, '%Y-%m-%d %H:%M:%S')
 
             # Formatting 'rdv_bilan' date
             if rdv_bilan:  # Check if 'rdv_bilan' is not None or empty
