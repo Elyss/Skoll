@@ -30,7 +30,7 @@
                 <p>{{message}}</p>
             {% endif %}
             
-            
+            <p>
             {% if file_url %}
                     <a class="btn btn-success" href="{{ file_url }}" target="_blank">PRE25 originale</a>
             {% endif %}
@@ -43,7 +43,7 @@
             {% if zip_file %}
                 <a class="btn btn-primary" href="{{ zip_file }}" download>Dossier complet</a>
             {% endif %}
-
+            </p>
 
 
             <form method="post" enctype="multipart/form-data" id="pdf-upload-form" autocomplete="on">
