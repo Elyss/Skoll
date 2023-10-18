@@ -115,24 +115,26 @@ def extract_information(text):
     else:
         info_dict["Organisme > Nom"] = "Not found"
 
-    lieu_realisation_match = re.search(r"Mél. :(.*?)Tél. :", text, re.DOTALL)
-    if lieu_realisation_match:
-        lieu_realisation = lieu_realisation_match.group(1).strip()
-        # Removing any sequence of more than 5 digits
-        lieu_realisation = re.sub(r"\d{5,}", "", lieu_realisation)
-        # Removing email addresses
-        lieu_realisation = re.sub(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-.]+)?", "", lieu_realisation)
-        info_dict["Organisme > lieu de réalisation"] = lieu_realisation.strip()
-    else:
-        info_dict["Organisme > lieu de réalisation"] = "Not found"
+    lieu_realisation_match = re.search(r"100% à distance", text)
+
+    if lieu_realisation_match:  # If "100% à distance" is found
+        info_dict["Organisme > lieu de réalisation"] = lieu_realisation_match.group(0)
+    else:  # If "100% à distance" is not found
+        # Trying to find text starting with "BGE ADIL -" up until "Tél"
+        lieu_realisation_match = re.search(r"BGE ADIL -.*?(?=Tél)", text, re.DOTALL)
+        if lieu_realisation_match:
+            lieu_realisation = lieu_realisation_match.group(0).strip()
+            info_dict["Organisme > lieu de réalisation"] = lieu_realisation
+        else:
+            info_dict["Organisme > lieu de réalisation"] = "Not found"
 
     info_dict["Organisme > Tel"] = "0145805155" # If there is a specific pattern to capture, add it here.
     info_dict["Organisme > Mail"] = emails[1] if len(emails) > 1 else "Not found"
     
     # Pole Emploi
-    pole_emploi_match = re.search(r"Pôle emploi de\s*:(.*?)(Lors de l'entretien|Lors de sa prise de rendez-vous)", text, re.DOTALL)
+    pole_emploi_match = re.search(r"Pôle emploi de\s*:([^\n]*)", text)
     if pole_emploi_match:
-        pole_emploi = pole_emploi_match.group(1).replace('\n', ' ').strip()  # Removing spaces and newline characters around and within the string
+        pole_emploi = pole_emploi_match.group(1).strip()  # Stripping spaces around the string
         info_dict["Correspondant > Pole emploi de"] = pole_emploi
     else:
         info_dict["Correspondant > Pole emploi de"] = "Not found"
@@ -298,7 +300,7 @@ def index(request):
         "form": form,
         "file_url": file_url,
         "extracted_info": tagged_info,
-        "raw_extracted_text": extracted_text,
+        "extracted_text": extracted_text,
         "PRE40_url": pre40_url,
         "PRE20_url": pre20_url,
         "zip_file": zip_file_url,

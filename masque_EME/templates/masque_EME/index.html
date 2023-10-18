@@ -51,6 +51,7 @@
                 <div id="drop-zone" class="mb-3">
                     <p>Glisser & Déposer la PRE25</p>
                 </div>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
 
                 <table class="table">
                     {% for field in form %}
@@ -73,6 +74,13 @@
             {% endfor %}
         </div>
         {% endif %}
+
+        {% if extracted_text %}
+        <pre>
+            {{extracted_text}}
+        </pre>
+        {% endif %}
+        
 
     </div>
 </div>
