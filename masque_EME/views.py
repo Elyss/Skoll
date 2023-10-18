@@ -211,7 +211,7 @@ def index(request):
             mail_conseiller= form.cleaned_data.get('mail_conseiller')  # Getting the content of 'conseiller' field
             # Capturing 'rdv_bilan' date
             date_str = form.cleaned_data['rdv_bilan']
-            rdv_bilan = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+            rdv_bilan = datetime.strptime(date_str, '%d/%m/%Y')
 
 
             # Formatting 'rdv_bilan' date
