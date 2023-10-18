@@ -25,7 +25,17 @@ services:
       - POSTGRES_DB=mydatabase
       - POSTGRES_USER=myuser
       - POSTGRES_PASSWORD=mypassword
-  
+
+  pgadmin:
+      image: dpage/pgadmin4
+      environment:
+        - PGADMIN_DEFAULT_EMAIL=fquijoux@bge-adil.eu
+        - PGADMIN_DEFAULT_PASSWORD=Bge-75014
+      ports:
+        - "5050:80"
+      depends_on:
+        - db
+
   nginx:
     image: nginx:1.19-alpine
     ports:
