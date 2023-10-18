@@ -220,7 +220,6 @@ def index(request):
             else:
                 rdv_bilan_format = "Not found"
 
-            tagged_info['RDV_BILAN_FORMAT'] = rdv_bilan_format
 
 
             planification_data = {
@@ -259,6 +258,9 @@ def index(request):
             # Adding 'conseiller' and 'mail_conseiller' values to tagged_info
             tagged_info['MAIL_CONSEILLER'] = mail_conseiller
             tagged_info['CONSEILLER'] = conseiller
+
+            tagged_info['RDV_BILAN_FORMAT'] = rdv_bilan_format
+
 
              # Adding 'planification_data' values to tagged_info with prefix PLANIF_
             for key, value in planification_data.items():
