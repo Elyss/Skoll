@@ -173,6 +173,7 @@ def index(request):
         'atelier_1': saved_data.get('atelier_1', ''),
         'point_etape_1': saved_data.get('point_etape_1', ''),
         'atelier_2': saved_data.get('atelier_2', ''),
+        'webinaire': saved_data.get('webinaire', ''),
         'point_etape_2': saved_data.get('point_etape_2', ''),
         'atelier_3': saved_data.get('atelier_3', ''),
         'point_etape_3': saved_data.get('point_etape_3', ''),
@@ -211,14 +212,18 @@ def index(request):
             mail_conseiller= form.cleaned_data.get('mail_conseiller')  # Getting the content of 'conseiller' field
             # Capturing 'rdv_bilan' date
             date_str = form.cleaned_data['rdv_bilan']
-            rdv_bilan = datetime.strptime(date_str, '%d/%m/%Y')
+            
+            try:
+                rdv_bilan = datetime.strptime(date_str, '%d/%m/%Y')
+            except (ValueError, TypeError):
+                rdv_bilan = None
 
 
             # Formatting 'rdv_bilan' date
             if rdv_bilan:  # Check if 'rdv_bilan' is not None or empty
                 rdv_bilan_format = rdv_bilan.strftime("|%d| / |%m| / |%y|")
             else:
-                rdv_bilan_format = "Not found"
+                rdv_bilan_format = ""
 
 
 
@@ -230,6 +235,7 @@ def index(request):
                 'point_etape_1': form.cleaned_data['point_etape_1'],
                 'atelier_2': form.cleaned_data['atelier_2'],
                 'point_etape_2': form.cleaned_data['point_etape_2'],
+                'webinaire': form.cleaned_data['webinaire'],
                 'atelier_3': form.cleaned_data['atelier_3'],
                 'point_etape_3': form.cleaned_data['point_etape_3'],
                 'rdv_intermediaire': form.cleaned_data['rdv_intermediaire'],
@@ -298,6 +304,7 @@ def index(request):
                 'atelier_1': saved_data.get('atelier_1', ''),
                 'point_etape_1': saved_data.get('point_etape_1', ''),
                 'atelier_2': saved_data.get('atelier_2', ''),
+                'webinaire': saved_data.get('webinaire', ''),
                 'point_etape_2': saved_data.get('point_etape_2', ''),
                 'atelier_3': saved_data.get('atelier_3', ''),
                 'point_etape_3': saved_data.get('point_etape_3', ''),

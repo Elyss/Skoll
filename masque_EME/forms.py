@@ -7,6 +7,7 @@ ACTION_CHOICES = [
     ('point_etape_1', 'Point d’étape 1'),
     ('atelier_2', 'Atelier 2 - Cohérence produit-service / Marché'),
     ('point_etape_2', 'Point d’étape 2'),
+    ('webinaire', 'Webinaire'),
     ('atelier_3', 'Atelier 3 - Objectif rémunération / Chiffre d’affaires'),
     ('point_etape_3', 'Point d’étape 3'),
     ('rdv_intermediaire', 'Rendez-vous intermédiaire : statuts juridiques'),
@@ -35,6 +36,7 @@ class pre40(forms.ModelForm):
     point_etape_1 = forms.CharField(required=False, max_length=255, label='Point d’étape 1')
     atelier_2 = forms.CharField(required=False, max_length=255, label='Atelier 2')
     point_etape_2 = forms.CharField(required=False, max_length=255, label='Point d’étape 2')
+    webinaire = forms.CharField(required=False, max_length=255, label='Webinaire')
     atelier_3 = forms.CharField(required=False, max_length=255, label='Atelier 3')
     point_etape_3 = forms.CharField(required=False, max_length=255, label='Point d’étape 3')
     rdv_intermediaire = forms.CharField(required=False, max_length=255, label='Rendez-vous intermédiaire')
