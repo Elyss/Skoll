@@ -92,7 +92,7 @@ def extract_information(text):
 
     info_dict["Bénéficiaire > Identifiant"] = re.search(r"Identifiant N° : (\w+)", text).group(1) if re.search(r"Identifiant N° : (\w+)", text) else "Not found"
 
-    beneficiary_name_match = re.search(r"Nom, prénom : (.*?)Nom :", text, re.DOTALL)
+    beneficiary_name_match = re.search(r"Nom, prénom : (.*?)\n", text)
     if beneficiary_name_match:
         beneficiary_name = beneficiary_name_match.group(1).strip()  # Removing spaces before and after the string
         info_dict["Bénéficiaire > Nom, Prénom"] = beneficiary_name
@@ -114,7 +114,7 @@ def extract_information(text):
     if organisme_nom_match:
         info_dict["Organisme > Nom"] = organisme_nom_match.group(1).strip()
     else:
-        info_dict["Organisme > Nom"] = "Not found"
+        info_dict["Organisme > Nom"] = "BGE ADIL"
 
     lieu_realisation_match = re.search(r"100% à distance", text)
 
